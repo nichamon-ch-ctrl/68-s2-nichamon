@@ -1,0 +1,39 @@
+# REST
+
+## Login
+POST http://localhost:9192/admin/login
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "password": "dummy_password",
+    "rememberMe": false
+}
+
+###
+
+## Register
+POST http://localhost:9192/admin/register
+Content-Type: application/json
+
+{
+    "email": "new@example.com",
+    "password": "dummy_password",
+    "name": "Dummy User"
+}
+
+###
+
+## Forgot Password
+POST http://localhost:9192/admin/forgot-password
+Content-Type: application/json
+
+{
+    "email": "test@example.com"
+}
+
+###
+
+## Profile
+GET http://localhost:9192/admin/profile
+Authorization: Bearer dummy_token_here
