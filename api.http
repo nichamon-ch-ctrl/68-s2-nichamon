@@ -1,39 +1,107 @@
-# REST
-
-## Login
-POST http://localhost:9192/admin/login
+## User Register
+POST http://localhost:9092/api/auth/local/register
 Content-Type: application/json
 
 {
-    "email": "test@example.com",
-    "password": "dummy_password",
+    "username": "{{$dotenv TEST_USERNAME}}",
+    "email": "{{$dotenv TEST_EMAIL}}",
+    "password": "{{$dotenv TEST_PASSWORD}}"
+}
+###
+
+## User Login
+# @name userLogin
+POST http://localhost:9092/api/auth/local
+Content-Type: application/json
+
+{
+    "identifier": "{{$dotenv TEST_EMAIL}}",
+    "password": "{{$dotenv TEST_PASSWORD}}"
+}
+
+###
+
+## User Forgot Password (1. ขอรหัส/ลิงก์รีเซ็ตรหัสผ่าน)
+POST http://localhost:9092/api/auth/forgot-password
+Content-Type: application/json
+                     
+{
+    "email": "{{$dotenv TEST_EMAIL}}"
+}
+
+###
+
+## User Reset Password (2. ตั้งรหัสผ่านใหม่)
+POST http://localhost:9092/api/auth/reset-password
+Content-Type: application/json
+
+{
+    "code": "RESET_CODE_FROM_EMAIL",
+    "password": "{{$dotenv TEST_PASSWORD}}",
+    "passwordConfirmation": "{{$dotenv TEST_PASSWORD}}"
+}
+
+###
+
+## User Profile
+GET http://localhost:9092/api/users/me
+Authorization: Bearer {{userLogin.response.body.jwt}}
+
+###
+
+
+# ==========================================
+# 2. ADMIN REST APIs
+# ==========================================
+
+## Admin Register
+POST http://localhost:9092/admin/register
+Content-Type: application/json
+
+{
+    "firstname": "Admin",
+    "lastname": "User",
+    "email": "{{$dotenv ADMIN_EMAIL}}",
+    "password": "{{$dotenv ADMIN_PASSWORD}}"
+}
+
+###
+
+## Admin Login
+# @name adminLogin
+POST http://localhost:9092/admin/login
+Content-Type: application/json
+
+{
+    "email": "{{$dotenv ADMIN_EMAIL}}",
+    "password": "{{$dotenv ADMIN_PASSWORD}}",
     "rememberMe": false
 }
 
 ###
 
-## Register
-POST http://localhost:9192/admin/register
+## Admin Forgot Password (1. ขอรหัส/ลิงก์รีเซ็ตรหัสผ่าน)
+POST http://localhost:9092/admin/forgot-password
 Content-Type: application/json
 
 {
-    "email": "new@example.com",
-    "password": "dummy_password",
-    "name": "Dummy User"
+    "email": "{{$dotenv ADMIN_EMAIL}}"
 }
 
 ###
 
-## Forgot Password
-POST http://localhost:9192/admin/forgot-password
+## Admin Reset Password (2. ตั้งรหัสผ่านใหม่)
+POST http://localhost:9092/admin/reset-password
 Content-Type: application/json
 
 {
-    "email": "test@example.com"
+    "code": "RESET_CODE_FROM_EMAIL",
+    "password": "{{$dotenv ADMIN_PASSWORD}}",
+    "passwordConfirmation": "{{$dotenv ADMIN_PASSWORD}}"
 }
 
 ###
 
-## Profile
-GET http://localhost:9192/admin/profile
-Authorization: Bearer dummy_token_here
+## Admin Profile
+GET http://localhost:9092/admin/users/me
+Authorization: Bearer {{adminLogin.response.body.data.token}}
